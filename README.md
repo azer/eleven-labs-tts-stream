@@ -2,8 +2,7 @@
 
 Library for real-time streaming LLM output to Eleven Labs' text-to-speech API.
 
-Work in progress:
-
+**WIP:**
 - [x] WebSocket wrapper for streaming text
 - [ ] Playlist for playing audio in order
 - [ ] Tests
