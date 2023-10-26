@@ -1,0 +1,14 @@
+{
+  "name": "eleven-labs-tts-stream",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "esbuild lib/index.ts --bundle --outfile=dist/index.js"
+  },
+  "author": "Azer Koculu",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.19.5"
+  }
+}
