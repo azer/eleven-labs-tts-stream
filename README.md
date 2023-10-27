@@ -19,7 +19,6 @@ $ npm i @azer/eleven-labs-tts-stream
 
 import { textToSpeechStream } from 'eleven-labs-tts-stream'
 
-
 const stream = textToSpeechStream({
     apiKey: '<eleven labs api key>',
     voiceId: '<voice id>',
@@ -35,6 +34,20 @@ stream.push('a test')
 stream.push('message.')
 
 // Indicate end of input
+stream.end()
+```
+
+Alternatively, object-orient API can be used for more granular control;
+
+```ts
+import { TextStream, Playlist } from 'eleven-labs-tts-stream'
+
+const stream = new TextStream({ apiKey: '..', voiceId: '...' })
+stream.playlist = new Playlist()
+
+await stream.start()
+stream.push('hello')
+stream.push('world')
 stream.end()
 ```
 
