@@ -9,6 +9,9 @@ interface ResponseMessage {
   [key: string]: any;
 }
 
+export interface TextStreamOptions {
+  apiKey: string, voiceId: string
+}
 
 export class TextStream {
   private socket: WebSocket | undefined
@@ -26,7 +29,7 @@ export class TextStream {
 
   verbose: boolean = false
 
-  constructor(options: { apiKey: string, voiceId: string }) {
+  constructor(options: TextStreamOptions) {
     this.apiKey = options.apiKey
     this.voiceId = options.voiceId
   }

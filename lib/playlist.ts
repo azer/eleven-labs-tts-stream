@@ -10,7 +10,7 @@ enum PlaylistStatus {
 }
 
 export class Playlist {
-  private enabled: boolean = false
+  private enabled: boolean = true
   private queue: PlaylistItem[] = []
   private stopFn: () => void
 
@@ -37,7 +37,7 @@ export class Playlist {
     this.status = PlaylistStatus.Idle
   }
 
-  enable(value?: false) {
+  setEnabled(value?: false) {
     this.enabled = value !== undefined ? value : true
   }
 
