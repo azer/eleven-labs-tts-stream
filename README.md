@@ -16,25 +16,25 @@ $ npm i @azer/eleven-labs-tts-stream
 ## Usage
 
 ```ts
-import { TextStream, Playlist } from 'eleven-labs-tts-stream'
 
-const stream = new TextStream({
-    apiKey: query.get('api_key') || '',
-    voiceId: 'EXAVITQu4vr4xnSDxMaL'
+import { textToSpeechStream } from 'eleven-labs-tts-stream'
+
+
+const stream = textToSpeechStream({
+    apiKey: '<eleven labs api key>',
+    voiceId: '<voice id>',
+    verbose: true // turns on verbose mode for logging
 })
 
-stream.playlist = new Playlist()
-stream.playlist.enable()
-
+// Make sure socket is initialized & ready
 await stream.start()
 
-// Start sending messages
 stream.push('hi!')
 stream.push('this is')
 stream.push('a test')
 stream.push('message.')
 
-// Call `end` method 
+// Indicate end of input
 stream.end()
 ```
 
