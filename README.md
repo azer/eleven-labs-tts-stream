@@ -2,11 +2,14 @@
 
 Library for real-time streaming LLM output to Eleven Labs' text-to-speech API.
 
-It's still work in progress:
+**Work in progress:**
 
 - [x] WebSocket wrapper for streaming text
 - [x] Playlist for playing audio in order
-- [ ] Design 
+- [ ] Missing methods:
+  - [ ] `TextStream.open`
+  - [ ] `Playlist.enable`
+  - [ ] `TextStream.close`
 - [ ] Get example working
 - [ ] Tests
 - [ ] React hook
