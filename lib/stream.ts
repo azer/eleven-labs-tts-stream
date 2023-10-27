@@ -12,6 +12,7 @@ interface ResponseMessage {
 
 export class TextStream {
   private socket: WebSocket | undefined
+  private apiKey: string | undefined
 
   playlist: Playlist
 
@@ -25,8 +26,9 @@ export class TextStream {
 
   verbose: boolean = false
 
-  constructor(voiceId: string) {
-    this.voiceId = voiceId
+  constructor(options: { apiKey: string, voiceId: string }) {
+    this.apiKey = options.apiKey
+    this.voiceId = options.voiceId
   }
 
   createSocket(callback: () => void) {
@@ -70,8 +72,13 @@ export class TextStream {
 
     this.socket.send(JSON.stringify({
       text,
-      voice_settings: this.voiceSettings()
+      voice_settings: this.voiceSettings(),
+      xi_api_key: this.apiKey
     }))
+  }
+
+  end() {
+    this.push('')
   }
 
   onOpen() {
@@ -84,7 +91,7 @@ export class TextStream {
     this.log('Received message', response)
 
     if (response.isFinal) {
-      this.playlist.end()
+      //this.playlist.end()
       return
     }
 
@@ -94,7 +101,7 @@ export class TextStream {
     }
 
     const text: string = response.normalizedAlignment?.chars?.join(' ') || ''
-    this.playlist.add(text, response.audio)
+    this.playlist.push(text, response.audio, response.isFinal || false)
   }
 
   onClose() {
@@ -110,24 +117,24 @@ export class TextStream {
     return `wss://api.elevenlabs.io/v1/text-to-speech/${this.voiceId}/stream-input?model_type=${this.model}&optimize_streaming_latency=${this.latency}`
   }
 
-  voiceSettings() {
-    return {
-      stability: this.stability,
-      similarity_boost: this.similarity_boost
-    }
-  }
-
   log(...args: unknown[]) {
     if (!this.verbose) {
       return
     }
 
     // @ts-ignore
-    console.log(['[eleven-labs-tts-stream]'].concat(args))
+    console.log.apply(console, ['[eleven-labs-tts/stream]'].concat(args))
   }
 
   error(...args: unknown[]) {
     // @ts-ignore
-    console.error(['[eleven-labs-tts-stream]'].concat(args))
+    console.error.apply(console, ['[eleven-labs-tts/stream]'].concat(args))
+  }
+
+  voiceSettings() {
+    return {
+      stability: this.stability,
+      similarity_boost: this.similarity_boost
+    }
   }
 }

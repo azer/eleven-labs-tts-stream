@@ -1,6 +1,7 @@
 interface PlaylistItem {
   base64Audio: string
   text: string
+  isFinal: boolean
 }
 
 enum PlaylistStatus {
@@ -15,14 +16,15 @@ export class Playlist {
 
   index: number = -1
   status = PlaylistStatus.Idle
-  verbose = false
+  verbose: boolean = true
 
-  add(text: string, base64Audio: string) {
+  push(text: string, base64Audio: string, isFinal: boolean) {
     this.log('Adding new item. Text: ', text, 'Size:', base64Audio.length)
 
     this.queue.push({
       base64Audio,
-      text
+      text,
+      isFinal
     })
 
     if (this.enabled && this.status === PlaylistStatus.Idle) {
@@ -35,22 +37,19 @@ export class Playlist {
     this.status = PlaylistStatus.Idle
   }
 
+  enable(value?: false) {
+    this.enabled = value !== undefined ? value : true
+  }
+
   start() {
     if (this.status === PlaylistStatus.Playing) return;
     if (!this.enabled) return;
 
+    this.log('Starting')
+
     this.status = PlaylistStatus.Playing;
 
-    this.playAtIndex(0, donePlaying)
-
-    function donePlaying() {
-      if (this.index + 1 >= this.queue.length) {
-	this.end();
-	return
-      }
-
-      this.playAtIndex(this.index + 1, donePlaying);
-    }
+    this.playAtIndex(0, () => this.playNext())
   }
 
   playAtIndex(index: number, callback: () => void) {
@@ -60,6 +59,15 @@ export class Playlist {
 
     this.index = index
     this.stopFn = playAudio(this.queue[index].base64Audio, callback)
+  }
+
+  playNext() {
+    if (this.index + 1 >= this.queue.length) {
+      this.end();
+      return
+    }
+
+    this.playAtIndex(this.index + 1, this.playNext.bind(this));
   }
 
   stop() {
@@ -76,17 +84,18 @@ export class Playlist {
     this.clear()
   }
 
-  log(...args: any[]) {
+  log(...args: unknown[]) {
     if (!this.verbose) {
       return
     }
 
-    console.log(['[eleven-labs-tts-stream/playlist]'].concat(args))
+    // @ts-ignore
+    console.log.apply(console, ['[eleven-labs-tts/playlist]'].concat(args))
   }
 
-  error(...args: any[]) {
+  error(...args: unknown[]) {
     // @ts-ignore
-    console.error(['[eleven-labs-tts-stream/playlist]'].concat(args))
+    console.error.apply(console, ['[eleven-labs-tts/playlist]'].concat(args))
   }
 }
 
