@@ -1,5 +1,15 @@
 import { Playlist } from './playlist'
 
+interface ResponseMessage {
+  isFinal?: boolean;
+  audio?: string;
+  normalizedAlignment?: {
+    chars?: string[];
+  };
+  [key: string]: any;
+}
+
+
 export class TextStream {
   private socket: WebSocket | undefined
 
@@ -26,16 +36,20 @@ export class TextStream {
       callback()
     }
 
-    this.socket.onmessage = this.onMessage
-    this.socket.onclose = this.onClose
+    this.socket.onmessage = this.onMessage.bind(this)
+    this.socket.onclose = this.onClose.bind(this)
+
+    // @ts-ignore
+    this.socket.onerror = (err: Event) => {
+      this.error('Socket error:', err)
+    }
   }
 
   open() {
     this.log('Opening')
 
-    const self = this
     return new Promise((resolve, reject) => {
-      self.createSocket(() => {
+      this.createSocket(() => {
 	this.log('Ready')
 	resolve(true)
       })
@@ -65,7 +79,7 @@ export class TextStream {
   }
 
   onMessage(event: MessageEvent) {
-    const response = JSON.parse(event.data)
+    const response: ResponseMessage = JSON.parse(event.data)
 
     this.log('Received message', response)
 
@@ -76,11 +90,10 @@ export class TextStream {
 
     if (!response.audio) {
       this.log('Received message with no audio')
+      return
     }
 
-    // @ts-ignore
-    const text: string = response.normalizedAlignment?.chars?.join(' ') | ''
-
+    const text: string = response.normalizedAlignment?.chars?.join(' ') || ''
     this.playlist.add(text, response.audio)
   }
 

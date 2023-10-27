@@ -18,6 +18,8 @@ export class Playlist {
   verbose = false
 
   add(text: string, base64Audio: string) {
+    this.log('Adding new item. Text: ', text, 'Size:', base64Audio.length)
+
     this.queue.push({
       base64Audio,
       text
@@ -43,7 +45,8 @@ export class Playlist {
 
     function donePlaying() {
       if (this.index + 1 >= this.queue.length) {
-	this.clear();
+	this.end();
+	return
       }
 
       this.playAtIndex(this.index + 1, donePlaying);
@@ -60,25 +63,30 @@ export class Playlist {
   }
 
   stop() {
-    this.stopFn()
+    this.log('Stopping')
+
+    if (this.stopFn) {
+      this.stopFn()
+      this.clear()
+    }
   }
 
   end() {
+    this.log('Ending')
     this.clear()
   }
 
-  log(...args: unknown[]) {
+  log(...args: any[]) {
     if (!this.verbose) {
       return
     }
 
-    // @ts-ignore
-    console.log(['[eleven-labs-tts-stream]'].concat(args))
+    console.log(['[eleven-labs-tts-stream/playlist]'].concat(args))
   }
 
-  error(...args: unknown[]) {
+  error(...args: any[]) {
     // @ts-ignore
-    console.error(['[eleven-labs-tts-stream]'].concat(args))
+    console.error(['[eleven-labs-tts-stream/playlist]'].concat(args))
   }
 }
 
