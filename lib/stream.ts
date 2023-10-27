@@ -1,7 +1,6 @@
 import { Playlist } from './playlist'
 
 export class TextStream {
-  private queue: string[]
   private socket: WebSocket
 
   playlist: Playlist
@@ -18,7 +17,6 @@ export class TextStream {
 
   constructor(voiceId: string) {
     this.voiceId = voiceId
-    this.queue = []
   }
 
   createSocket() {
@@ -28,7 +26,11 @@ export class TextStream {
     this.socket.onclose = this.onClose
   }
 
-  sendText(text: string) {
+  clear() {
+    this.socket = undefined
+  }
+
+  send(text: string) {
     this.socket.send(JSON.stringify({
       text,
       voice_settings: this.voiceSettings()
@@ -92,5 +94,4 @@ export class TextStream {
     // @ts-ignore
     console.error(['[eleven-labs-tts-stream]'].concat(args))
   }
-
 }
