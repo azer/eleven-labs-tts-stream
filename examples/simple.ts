@@ -1,10 +1,23 @@
 import { TextStream, Playlist } from '../lib/index'
 
-main()
+document.querySelector('button').onclick = test
 
-async function main() {
-  const stream = new TextStream('model-id')
+async function test() {
+  const query = new URLSearchParams(window.location.search)
+  const stream = new TextStream({
+    apiKey: query.get('api_key') || '',
+    voiceId: 'EXAVITQu4vr4xnSDxMaL'
+  })
+
   stream.playlist = new Playlist()
+  stream.verbose = true
+  stream.playlist.enable()
 
   await stream.open()
+
+  stream.push('hi!')
+  stream.push('this is')
+  stream.push('a test')
+  stream.push('message.')
+  stream.end()
 }

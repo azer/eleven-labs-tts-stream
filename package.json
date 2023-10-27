@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "esbuild lib/index.ts --bundle --outfile=dist/index.js"
+    "build": "esbuild lib/index.ts --bundle --outfile=dist/index.js",
+    "serve-examples": "esbuild examples/simple.ts --outdir=examples --bundle --servedir=examples"
   },
   "author": "Azer Koculu",
   "license": "ISC",
