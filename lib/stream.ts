@@ -47,7 +47,7 @@ export class TextStream {
     }
   }
 
-  open() {
+  start() {
     this.log('Opening')
 
     return new Promise((resolve, reject) => {
@@ -90,17 +90,12 @@ export class TextStream {
 
     this.log('Received message', response)
 
-    if (response.isFinal) {
-      //this.playlist.end()
-      return
-    }
-
     if (!response.audio) {
       this.log('Received message with no audio')
       return
     }
 
-    const text: string = response.normalizedAlignment?.chars?.join(' ') || ''
+    const text: string = response.normalizedAlignment?.chars?.join('') || ''
     this.playlist.push(text, response.audio, response.isFinal || false)
   }
 

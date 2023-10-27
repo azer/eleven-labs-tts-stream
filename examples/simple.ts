@@ -13,11 +13,21 @@ async function test() {
   stream.verbose = true
   stream.playlist.enable()
 
-  await stream.open()
+  await stream.start()
 
   stream.push('hi!')
   stream.push('this is')
   stream.push('a test')
   stream.push('message.')
   stream.end()
+
+  setTimeout(async () => {
+    await stream.start()
+
+    stream.push('how')
+    stream.push('are')
+    stream.push('you')
+    stream.push('today?')
+    stream.end()
+  }, 100)
 }
