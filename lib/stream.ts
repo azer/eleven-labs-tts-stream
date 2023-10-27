@@ -31,9 +31,12 @@ export class TextStream {
   }
 
   open() {
+    this.log('Opening')
+
     const self = this
     return new Promise((resolve, reject) => {
       self.createSocket(() => {
+	this.log('Ready')
 	resolve(true)
       })
     })
@@ -43,11 +46,13 @@ export class TextStream {
     this.socket = undefined
   }
 
-  send(text: string) {
+  push(text: string) {
     if (!this.socket) {
       this.error('Socket not ready')
       return
     }
+
+    this.log('Send', text)
 
     this.socket.send(JSON.stringify({
       text,
@@ -56,8 +61,7 @@ export class TextStream {
   }
 
   onOpen() {
-    this.log('Socket open')
-    this.send(' ')
+    this.push(' ')
   }
 
   onMessage(event: MessageEvent) {
@@ -82,6 +86,7 @@ export class TextStream {
 
   onClose() {
     this.log('Socket closed')
+    this.clear()
   }
 
   onError(error: Error) {

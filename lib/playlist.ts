@@ -15,6 +15,7 @@ export class Playlist {
 
   index: number = -1
   status = PlaylistStatus.Idle
+  verbose = false
 
   add(text: string, base64Audio: string) {
     this.queue.push({
@@ -52,6 +53,8 @@ export class Playlist {
   playAtIndex(index: number, callback: () => void) {
     if (!this.enabled) return;
 
+    this.log('Play audio at index:', index)
+
     this.index = index
     this.stopFn = playAudio(this.queue[index].base64Audio, callback)
   }
@@ -61,7 +64,21 @@ export class Playlist {
   }
 
   end() {
-    // FIXME
+    this.clear()
+  }
+
+  log(...args: unknown[]) {
+    if (!this.verbose) {
+      return
+    }
+
+    // @ts-ignore
+    console.log(['[eleven-labs-tts-stream]'].concat(args))
+  }
+
+  error(...args: unknown[]) {
+    // @ts-ignore
+    console.error(['[eleven-labs-tts-stream]'].concat(args))
   }
 }
 
