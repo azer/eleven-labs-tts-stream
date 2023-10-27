@@ -37,3 +37,12 @@ stream.push('message.')
 // Call `end` method 
 stream.end()
 ```
+
+## Examples
+
+To run examples locally;
+
+```
+$ npm run serve-examples
+# go to http://127.0.0.1:8001/simple.html?api_key=<eleven labs key here>
+```
