@@ -1,7 +1,7 @@
 import { Playlist } from './playlist'
 
 export class TextStream {
-  private socket: WebSocket
+  private socket: WebSocket | undefined
 
   playlist: Playlist
 
@@ -19,11 +19,24 @@ export class TextStream {
     this.voiceId = voiceId
   }
 
-  createSocket() {
+  createSocket(callback: () => void) {
     this.socket = new WebSocket(this.wsUrl())
-    this.socket.onopen = this.onOpen
+    this.socket.onopen = () => {
+      this.onOpen()
+      callback()
+    }
+
     this.socket.onmessage = this.onMessage
     this.socket.onclose = this.onClose
+  }
+
+  open() {
+    const self = this
+    return new Promise((resolve, reject) => {
+      self.createSocket(() => {
+	resolve(true)
+      })
+    })
   }
 
   clear() {
@@ -31,6 +44,11 @@ export class TextStream {
   }
 
   send(text: string) {
+    if (!this.socket) {
+      this.error('Socket not ready')
+      return
+    }
+
     this.socket.send(JSON.stringify({
       text,
       voice_settings: this.voiceSettings()
@@ -39,7 +57,7 @@ export class TextStream {
 
   onOpen() {
     this.log('Socket open')
-    this.sendText(' ')
+    this.send(' ')
   }
 
   onMessage(event: MessageEvent) {
