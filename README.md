@@ -4,14 +4,7 @@ Library for real-time streaming LLM output to Eleven Labs' text-to-speech API.
 
 **Work in progress:**
 
-- [x] WebSocket wrapper for streaming text
-- [x] Playlist for playing audio in order
-- [ ] Missing methods:
-  - [x] `TextStream.open`
-  - [ ] `Playlist.enable`
-  - [x] `TextStream.close`
-- [ ] Get example working
-- [ ] Tests
+- [x] Vanilla JavaScript library
 - [ ] React hook
 
 ## Install
@@ -25,14 +18,22 @@ $ npm i @azer/eleven-labs-tts-stream
 ```ts
 import { TextStream, Playlist } from 'eleven-labs-tts-stream'
 
-const stream = new TextStream('voice-id-here')
+const stream = new TextStream({
+    apiKey: query.get('api_key') || '',
+    voiceId: 'EXAVITQu4vr4xnSDxMaL'
+})
 
 stream.playlist = new Playlist()
 stream.playlist.enable()
 
-await stream.open()
+await stream.start()
 
-stream.push('Hi!')
-stream.push('This is')
-stream.push('a test.')
+// Start sending messages
+stream.push('hi!')
+stream.push('this is')
+stream.push('a test')
+stream.push('message.')
+
+// Call `end` method 
+stream.end()
 ```
