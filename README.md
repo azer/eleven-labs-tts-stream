@@ -6,6 +6,7 @@ Library for real-time streaming LLM output to Eleven Labs' text-to-speech API.
 
 - [x] Vanilla JavaScript library
 - [ ] React hook
+- [ ] Tests
 
 ## Install
 
