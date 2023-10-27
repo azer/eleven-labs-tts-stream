@@ -1,15 +1,15 @@
 # eleven-labs-tts-stream
 
-Library for real-time streaming LLM output to Eleven Labs' text-to-speech API.
+Library for real-time streaming LLM output to Eleven Labs' text-to-speech API. 
 
 **Work in progress:**
 
 - [x] WebSocket wrapper for streaming text
 - [x] Playlist for playing audio in order
 - [ ] Missing methods:
-  - [ ] `TextStream.open`
+  - [x] `TextStream.open`
   - [ ] `Playlist.enable`
-  - [ ] `TextStream.close`
+  - [x] `TextStream.close`
 - [ ] Get example working
 - [ ] Tests
 - [ ] React hook
