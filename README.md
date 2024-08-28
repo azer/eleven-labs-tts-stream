@@ -11,7 +11,7 @@ Library for real-time streaming LLM output to Eleven Labs' text-to-speech API.
 ## Install
 
 ```bash
-$ npm i @azer/eleven-labs-tts-stream
+$ npm i azer/eleven-labs-tts-stream
 ```
 
 ## Usage
